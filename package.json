@@ -1,0 +1,48 @@
+{
+  "name": "hyperapp-tetris",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "dev": "webpack-dev-server --config webpack/devserver.js",
+    "build": "webpack --config webpack/build.js",
+    "test": "jest test --watch"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/goldenthumb/hyperapp-tetris.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/goldenthumb/hyperapp-tetris/issues"
+  },
+  "devDependencies": {
+    "autoprefixer": "^8.0.0",
+    "babel-cli": "^6.26.0",
+    "babel-core": "^6.26.3",
+    "babel-eslint": "^9.0.0",
+    "babel-jest": "^23.4.2",
+    "babel-loader": "^7.1.5",
+    "babel-plugin-transform-object-rest-spread": "^6.26.0",
+    "babel-plugin-transform-react-jsx": "^6.24.1",
+    "babel-preset-env": "^1.7.0",
+    "css-loader": "^0.28.9",
+    "eslint": "^5.4.0",
+    "eslint-config-airbnb-base": "^13.1.0",
+    "eslint-plugin-import": "^2.14.0",
+    "eslint-plugin-react": "^7.11.1",
+    "jest": "^23.5.0",
+    "node-sass": "^4.9.3",
+    "postcss-loader": "^3.0.0",
+    "regenerator-runtime": "^0.12.1",
+    "sass-loader": "^6.0.6",
+    "style-loader": "^0.20.1",
+    "webpack": "^4.17.1",
+    "webpack-cli": "^3.1.0",
+    "webpack-dev-server": "^3.1.5"
+  },
+  "dependencies": {
+    "hyperapp": "^1.2.8"
+  }
+}

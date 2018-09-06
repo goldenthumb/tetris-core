@@ -1,0 +1,21 @@
+{
+  "extends": "airbnb-base",
+  "plugins": [
+    "import",
+    "react"
+  ],
+  "rules": {
+    "comma-dangle": 0,
+    "no-shadow": 0,
+    "no-unused-vars": [2, { "varsIgnorePattern": "h" }],
+    "dot-notation": 0,
+    "react/jsx-uses-vars": 2
+  },
+  "parser": "babel-eslint",
+  "parserOptions": {
+    "allowImportExportEverywhere": true
+  },
+  "env": {
+    "browser": true
+  }
+}
