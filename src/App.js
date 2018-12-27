@@ -1,8 +1,13 @@
 import { h } from 'hyperapp';
-import Counter from './components/Counter';
+
+import BlockChanger from './components/BlockChanger/index';
+import Main from './components/Main/index';
 
 const view = () => (
-  <Counter />
+  <div style={{ display: 'flex' }}>
+    <BlockChanger />
+    <Main />
+  </div>
 );
 
 export default view;

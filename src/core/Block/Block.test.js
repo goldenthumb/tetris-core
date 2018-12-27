@@ -1,4 +1,4 @@
-import Block from '../Block';
+import Block from './Block';
 
 const BLOCK = {
   color: '#00a9eb',
@@ -14,8 +14,8 @@ test('초기값', () => {
   const {color, types} = BLOCK;
   const block = new Block(color, types);
 
-  expect(block.info.color).toBe(color);
-  expect(block.info.type).toBe(types[0]);
+  expect(block._color).toBe(color);
+  expect(block._types[block._type]).toBe(types[0]);
 });
 
 test('시계방향 회전', () => {
@@ -23,16 +23,16 @@ test('시계방향 회전', () => {
   const block = new Block(color, types);
 
   block.rotate();
-  expect(block.info.type).toBe(types[1]);
+  expect(block._types[block._type]).toBe(types[1]);
 
   block.rotate();
-  expect(block.info.type).toBe(types[2]);
+  expect(block._types[block._type]).toBe(types[2]);
 
   block.rotate();
-  expect(block.info.type).toBe(types[3]);
+  expect(block._types[block._type]).toBe(types[3]);
 
   block.rotate();
-  expect(block.info.type).toBe(types[0]);
+  expect(block._types[block._type]).toBe(types[0]);
 });
 
 test('반시계방향 회전', () => {
@@ -40,14 +40,14 @@ test('반시계방향 회전', () => {
   const block = new Block(color, types);
 
   block.rotate(false);
-  expect(block.info.type).toBe(types[3]);
+  expect(block._types[block._type]).toBe(types[3]);
 
   block.rotate(false);
-  expect(block.info.type).toBe(types[2]);
+  expect(block._types[block._type]).toBe(types[2]);
 
   block.rotate(false);
-  expect(block.info.type).toBe(types[1]);
+  expect(block._types[block._type]).toBe(types[1]);
 
   block.rotate(false);
-  expect(block.info.type).toBe(types[0]);
+  expect(block._types[block._type]).toBe(types[0]);
 });

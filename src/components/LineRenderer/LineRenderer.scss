@@ -1,0 +1,8 @@
+.line {
+  font-size: 0;
+  border-bottom: 1px solid rgba(210, 207, 207, 0.3);
+
+  &:last-child {
+    border-bottom: 0;
+  }
+}

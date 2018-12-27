@@ -4,11 +4,13 @@
   ],
   "env": {
     "test": {
-      "presets": [["env"]]
+      "presets": [
+        ["env", { "targets": { "node": "current" } }]
+      ]
     }
   },
   "plugins": [
-    ["transform-react-jsx", { "pragma": "h" }],
+    ["transform-react-jsx",  { "pragma": "h", "pragmaFrag": "''" }],
     ["transform-object-rest-spread", { "useBuiltIns": true }]
   ]
 }

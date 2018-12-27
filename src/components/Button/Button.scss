@@ -1,0 +1,50 @@
+.button {
+  border: 0;
+  padding: 10px 20px;
+  background: #c1c1c1;
+  border-radius: 4px;
+  color: #333333;
+  font-size: 12px;
+
+  &:hover {
+    cursor: pointer;
+  }
+
+  & + & {
+    margin-left: 0.5rem;
+  }
+
+  &::after {
+    content: attr(data-content);
+  }
+}
+
+.arrow {
+  border: 0;
+  padding: 10px 24px;
+  background: #c1c1c1;
+  color: #333333;
+  font-size: 12px;
+  outline: 0;
+
+  &:hover {
+    cursor: pointer;
+  }
+
+  &::after {
+    content: attr(data-content);
+  }
+}
+
+.none {
+  border: 0;
+  padding: 10px 24px;
+  background: transparent;
+  color: transparent;
+  font-size: 12px;
+  outline: 0;
+
+  &::after {
+    content: attr(data-content);
+  }
+}
