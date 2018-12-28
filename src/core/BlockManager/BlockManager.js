@@ -1,4 +1,4 @@
-import BLOCKS from '../constants/BLOCKS';
+import BLOCKS from './BLOCKS';
 import Block from '../Block';
 
 export default class BlockManager {
@@ -35,21 +35,21 @@ export default class BlockManager {
     return false;
   }
 
-  down({ rows, cols }) {
+  moveDown({ rows, cols }) {
     const { x, y } = this.position;
     const position = { x: x, y: y + 1 };
 
     return this._move({ position, rows, cols });
   }
 
-  left({ rows, cols }) {
+  moveLeft({ rows, cols }) {
     const { x, y } = this.position;
     const position = { x: x - 1, y: y };
 
     return this._move({ position, rows, cols });
   }
 
-  right({ rows, cols }) {
+  moveRight({ rows, cols }) {
     const { x, y } = this.position;
     const position = { x: x + 1, y: y };
 

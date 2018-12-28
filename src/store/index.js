@@ -1,21 +1,28 @@
-import Data from '../core/Data';
 import BlockManager from '../core/BlockManager';
+import DisplayManager from '../core/DisplayManager';
+
+const DISPLAY = { rows: 20, cols: 11 };
+const START_POINT = { x: 4, y: 0 };
 
 export const state = {
   tetris: {
-    blockManager: new BlockManager({ x: 4, y: 0 }),
-    currentBlocksData: new Data({ rows: 20, cols: 11 }).initialize(),
-    totalBlocksData: new Data({ rows: 20, cols: 11 }).initialize()
+    blockManager: new BlockManager(START_POINT),
+    displayManager: new DisplayManager(DISPLAY)
   }
 };
 
 export const actions = {
   tetris: {
-    blockManager: (action) => ({ blockManager, currentBlocksData }) => {
-      const { rows, cols } = currentBlocksData;
+    block: (action) => ({ blockManager, displayManager }) => {
+      const { rows, cols } = displayManager.current;
       const nextBlockManager = blockManager[action]({ rows, cols });
-      if (nextBlockManager) return { blockManager: nextBlockManager };
-    },
-    setDisplayData: (currentBlockData) => ({ currentBlockData })
+
+      if (nextBlockManager) {
+        const { block, position } = blockManager;
+        displayManager.setDisplay({ block, position });
+
+        return { blockManager: nextBlockManager };
+      }
+    }
   }
 };

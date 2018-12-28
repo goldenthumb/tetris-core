@@ -10,7 +10,7 @@ const BLOCK = {
   }
 };
 
-test('초기값', () => {
+test('initialize', () => {
   const {color, types} = BLOCK;
   const block = new Block(color, types);
 
@@ -18,7 +18,7 @@ test('초기값', () => {
   expect(block._types[block._type]).toBe(types[0]);
 });
 
-test('시계방향 회전', () => {
+test('rotate clockwise', () => {
   const {color, types} = BLOCK;
   const block = new Block(color, types);
 
@@ -35,7 +35,7 @@ test('시계방향 회전', () => {
   expect(block._types[block._type]).toBe(types[0]);
 });
 
-test('반시계방향 회전', () => {
+test('rotate anticlockwise', () => {
   const {color, types} = BLOCK;
   const block = new Block(color, types);
 
