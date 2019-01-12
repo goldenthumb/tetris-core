@@ -1,13 +1,7 @@
 import { h } from 'hyperapp';
 
-import BlockChanger from './components/BlockChanger/index';
-import Main from './components/Main/index';
+import Main from './components/Main';
 
-const view = () => (
-  <div style={{ display: 'flex' }}>
-    <BlockChanger />
-    <Main />
-  </div>
-);
+const view = () => <Main />;
 
 export default view;
