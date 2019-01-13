@@ -11,23 +11,20 @@ export default class DisplayManager {
   setDisplay({ block, position }) {
     this.current = this._appendBlock({
       block: deepCopy(block.colorize()),
-      startRow: position.y,
-      startCol: position.x
+      ...position
     });
 
     this.data = this.current;
   }
 
-  _appendBlock({ block, startRow, startCol }) {
+  _appendBlock({ block, y, x }) {
     const display = this._createData();
 
-    for (let row = 0; row < block.length; row++) {
-      for (let col = 0; col < block[row].length; col++) {
-        if (block[row][col] !== 0) {
-          display[startRow + row][startCol + col] = block[row][col];
-        }
-      }
-    }
+    block.forEach((value, row) => {
+      value.forEach((value, col) => {
+        display[y + row][x + col] = value;
+      })
+    });
 
     return display;
   };
