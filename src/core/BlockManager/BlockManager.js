@@ -2,25 +2,18 @@ import BLOCKS from './BLOCKS';
 import Block from '../Block';
 
 export default class BlockManager {
-  constructor(position) {
-    this.blocks = BLOCKS.map(({ color, types }) => new Block(color, types));
-    this.position = position;
+  constructor(startPoint) {
     this.index = 0;
+    this.blocks = BLOCKS.map(({ color, types }) => new Block(color, types));
+    this.startPoint = startPoint;
+    this.position = this.startPoint;
     this.block = this.blocks[this.index];
   }
 
-  change(display) {
-    const nextIndex = this.index > this.blocks.length - 2 ? 0 : this.index + 1;
-    const nextBlock = this.blocks[this.index];
-
-    if (this._isAvailable({ block: nextBlock, display })) {
-      this.index = nextIndex;
-      this.block = nextBlock;
-
-      return this;
-    }
-
-    return false;
+  change() {
+    this.position = this.startPoint;
+    this.index = Math.floor((Math.random() * this.blocks.length - 1) + 1);
+    this.block = this.blocks[this.index];
   }
 
   rotate(display) {
