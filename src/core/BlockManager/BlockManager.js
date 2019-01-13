@@ -9,11 +9,11 @@ export default class BlockManager {
     this.block = this.blocks[this.index];
   }
 
-  change({ rows, cols }) {
+  change(display) {
     const nextIndex = this.index > this.blocks.length - 2 ? 0 : this.index + 1;
     const nextBlock = this.blocks[this.index];
 
-    if (this._isAvailable({ block: nextBlock, rows, cols })) {
+    if (this._isAvailable({ block: nextBlock, display })) {
       this.index = nextIndex;
       this.block = nextBlock;
 
@@ -23,10 +23,10 @@ export default class BlockManager {
     return false;
   }
 
-  rotate({ rows, cols }) {
+  rotate(display) {
     this.block.rotate();
 
-    if (this._isAvailable({ rows, cols })) {
+    if (this._isAvailable({ display })) {
       return this;
     }
 
@@ -35,28 +35,30 @@ export default class BlockManager {
     return false;
   }
 
-  moveDown({ rows, cols }) {
+  moveDown(display) {
     const { x, y } = this.position;
     const position = { x: x, y: y + 1 };
 
-    return this._move({ position, rows, cols });
+    return this._move({ position, display });
   }
 
-  moveLeft({ rows, cols }) {
+  moveLeft(display) {
     const { x, y } = this.position;
     const position = { x: x - 1, y: y };
 
-    return this._move({ position, rows, cols });
+    return this._move({ position, display });
   }
 
-  moveRight({ rows, cols }) {
+  moveRight(display) {
     const { x, y } = this.position;
     const position = { x: x + 1, y: y };
 
-    return this._move({ position, rows, cols });
+    return this._move({ position, display });
   }
 
-  _isAvailable({ block = this.block, position = this.position, rows, cols }) {
+  _isAvailable({ block = this.block, position = this.position, display }) {
+    const { rows, cols } = display;
+
     return (
       position.y >= 0 &&
       position.x >= 0 &&
@@ -65,8 +67,8 @@ export default class BlockManager {
     );
   }
 
-  _move({ position, rows, cols }) {
-    if (this._isAvailable({ position, rows, cols })) {
+  _move({ position, display }) {
+    if (this._isAvailable({ position, display })) {
       this.position = position;
       return this;
     }

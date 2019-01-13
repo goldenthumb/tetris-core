@@ -14,8 +14,7 @@ export const state = {
 export const actions = {
   tetris: {
     block: (action) => ({ blockManager, displayManager }) => {
-      const { rows, cols } = displayManager.current;
-      const nextBlockManager = blockManager[action]({ rows, cols });
+      const nextBlockManager = blockManager[action](displayManager.data);
 
       if (nextBlockManager) {
         const { block, position } = blockManager;
