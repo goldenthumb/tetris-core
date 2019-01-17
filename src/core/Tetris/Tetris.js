@@ -1,54 +1,67 @@
 import Data from '../Data';
 import BlockManager from '../BlockManager';
 
-import { deepCopy } from '../../lib/utils';
-
 export default class Tetris {
   constructor(OPTIONS) {
     this.size = OPTIONS.DISPLAY;
-    this.current = new Data(this.size).initialize();
-    this.data = new Data(this.size).initialize();
-    this.blockManager = new BlockManager(OPTIONS.START_POINT);
+    this._current = new Data(this.size).initialize();
+    this._data = new Data(this.size).initialize();
+    this._block = new BlockManager(OPTIONS.START_POINT);
   }
 
   change() {
-    this.blockManager.change(this.data);
-    this._updateCurrentBlock();
-    return this.data = this.current;
+    this._block.change(this._data);
+    return this._updateBlockData();
   }
 
   rotate() {
-    this.blockManager.rotate(this.data);
-    this._updateCurrentBlock();
-    return this.data = this.current;
+    this._block.rotate(this._data);
+    return this._updateBlockData();
   }
 
   moveDown() {
-    this.blockManager.moveDown(this.data);
-    this._updateCurrentBlock();
-    return this.data = this.current;
+    this._block.moveDown(this._data);
+    return this._updateBlockData();
   }
 
   moveLeft() {
-    this.blockManager.moveLeft(this.data);
-    this._updateCurrentBlock();
-    return this.data = this.current;
+    this._block.moveLeft(this._data);
+    return this._updateBlockData();
   }
 
   moveRight() {
-    this.blockManager.moveRight(this.data);
-    this._updateCurrentBlock();
-    return this.data = this.current;
+    this._block.moveRight(this._data);
+    return this._updateBlockData();
   }
-  
-  _updateCurrentBlock() {
-    const { block, position } = this.blockManager;
 
-    this.current = this._appendBlock({
+  _updateBlockData() {
+    const { block, position } = this._block;
+
+    const nextCurrent = this._appendBlock({
       display: new Data(this.size).initialize(),
-      block: deepCopy(block.colorize()),
+      block: block.colorize(),
       ...position
     });
+
+    const isOnTheBottom = (position.y + block.rows) === this.size.rows;
+
+    if (this._isOverlap(this._data, nextCurrent)) {
+      if (position.y === 0) {
+        alert('end');
+        this._initializeData();
+        return this.change();
+      }
+
+      this._data = this._merge(this._data, this._current);
+      return this.change();
+    }
+
+    if (isOnTheBottom) {
+      this._data = this._merge(this._data, this._current = nextCurrent);
+      return this.change();
+    }
+
+    return this._merge(this._cloneData(this._data), this._current = nextCurrent);
   }
 
   _appendBlock({ display, block, y, x }) {
@@ -60,4 +73,45 @@ export default class Tetris {
 
     return display;
   };
+
+  _cloneData(data) {
+    const newData = new Data(this.size).initialize();
+
+    data.forEach((value, row) => {
+      value.forEach((value, col) => {
+        newData[row][col] = value;
+      });
+    });
+
+    return newData;
+  }
+
+  _isOverlap(a, b) {
+    for (let row = 0; row < this.size.rows; row++) {
+      for (let col = 0; col < this.size.cols; col++) {
+        if (a[row][col] !== 0 && b[row][col] !== 0) {
+          return true;
+        }
+      }
+    }
+
+    return false;
+  }
+
+  _merge(total, current) {
+    total.forEach((value, row) => {
+      value.forEach((value, col) => {
+        if (current[row][col] !== 0) {
+          total[row][col] = current[row][col];
+        }
+      });
+    });
+
+    return total;
+  }
+
+  _initializeData() {
+    this._current = new Data(this.size).initialize();
+    this._data = new Data(this.size).initialize();
+  }
 }

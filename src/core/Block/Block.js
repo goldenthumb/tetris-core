@@ -27,6 +27,7 @@ export default class Block {
     return deepCopy(this._types[this._type]).map((line) => (
       line.map((cell, i) => {
         if (line[i] === 1) return this._color;
+        else return 0;
       })
     ))
   }
