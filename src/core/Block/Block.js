@@ -13,6 +13,11 @@ export default class Block {
     this._setBlockSize();
   }
 
+  initialize() {
+    this._type = 0;
+    return this;
+  }
+
   rotate(isClockwise = true) {
     isClockwise
       ? this._clockwise()

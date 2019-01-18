@@ -9,6 +9,7 @@ const tetris = new Tetris(OPTIONS);
 
 export const state = {
   tetris: {
+    nextBlock: null,
     displayData: null
   }
 };
@@ -16,7 +17,7 @@ export const state = {
 export const actions = {
   tetris: {
     block: (action) => () => {
-      return { displayData: tetris[action]() };
+      return tetris[action]().getRenderData();
     }
   }
 };

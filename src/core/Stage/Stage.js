@@ -24,13 +24,13 @@ export default class Stage {
   }
 
   _setSpeed() {
-    const {min, max} = this._options.speed;
+    const { min, max } = this._options.speed;
     this._speed = min - ((min - max) * (this._stage / this._options.max));
   }
 
   _setCount() {
-    const {point, times} = this._options.count;
-    this._count = point + (times * this._stage)
+    const { point, times } = this._options.count;
+    this._count = point + (times * this._stage);
   }
 
   get stage() {

@@ -1,7 +1,8 @@
 import { h } from 'hyperapp';
 import css from './Main.scss';
 
-import Display from '../Display/index';
+import Preview from '../Preview';
+import Display from '../Display';
 
 const Main = () => ({ tetris: { blockManager } }, { tetris: tetrisActions }) => {
   const keyDownListener = ({ keyCode }) => {
@@ -34,6 +35,7 @@ const Main = () => ({ tetris: { blockManager } }, { tetris: tetrisActions }) => 
         document.removeEventListener('keydown', keyDownListener);
       }}
     >
+      <Preview />
       <Display/>
     </div>
   );

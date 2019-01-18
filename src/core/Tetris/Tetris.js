@@ -6,36 +6,44 @@ export default class Tetris {
     this.size = OPTIONS.DISPLAY;
     this._current = new Data(this.size).initialize();
     this._data = new Data(this.size).initialize();
-    this._block = new BlockManager(OPTIONS.START_POINT);
+    this._blockManager = new BlockManager(OPTIONS.START_POINT);
+    this._nextBlock = null;
   }
 
   change() {
-    this._block.change(this._data);
-    return this._updateBlockData();
+    this._nextBlock = this._blockManager.change(this._data);
+    return this;
   }
 
   rotate() {
-    this._block.rotate(this._data);
-    return this._updateBlockData();
+    this._blockManager.rotate(this._data);
+    return this;
   }
 
   moveDown() {
-    this._block.moveDown(this._data);
-    return this._updateBlockData();
+    this._blockManager.moveDown(this._data);
+    return this;
   }
 
   moveLeft() {
-    this._block.moveLeft(this._data);
-    return this._updateBlockData();
+    this._blockManager.moveLeft(this._data);
+    return this;
   }
 
   moveRight() {
-    this._block.moveRight(this._data);
-    return this._updateBlockData();
+    this._blockManager.moveRight(this._data);
+    return this;
   }
 
-  _updateBlockData() {
-    const { block, position } = this._block;
+  getRenderData() {
+    return {
+      nextBlock: this._nextBlock,
+      displayData: this._getDisplayData()
+    }
+  }
+
+  _getDisplayData() {
+    const { block, position } = this._blockManager;
 
     const nextCurrent = this._appendBlock({
       display: new Data(this.size).initialize(),
@@ -46,19 +54,18 @@ export default class Tetris {
     const isOnTheBottom = (position.y + block.rows) === this.size.rows;
 
     if (this._isOverlap(this._data, nextCurrent)) {
-      if (position.y === 0) {
+      if (position.y === 1) {
         alert('end');
-        this._initializeData();
-        return this.change();
       }
 
-      this._data = this._merge(this._data, this._current);
-      return this.change();
+      this.change();
+      return this._data = this._merge(this._data, this._current);
     }
 
     if (isOnTheBottom) {
+      this.change();
       this._data = this._merge(this._data, this._current = nextCurrent);
-      return this.change();
+      return this._data;
     }
 
     return this._merge(this._cloneData(this._data), this._current = nextCurrent);
@@ -108,10 +115,5 @@ export default class Tetris {
     });
 
     return total;
-  }
-
-  _initializeData() {
-    this._current = new Data(this.size).initialize();
-    this._data = new Data(this.size).initialize();
   }
 }

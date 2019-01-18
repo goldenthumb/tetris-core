@@ -6,14 +6,26 @@ export default class BlockManager {
     this.index = 0;
     this.blocks = BLOCKS.map(({ color, types }) => new Block(color, types));
     this.startPoint = startPoint;
+    this.position = null;
+    this.block = null;
+    this.nextBlock = null;
+
+    this.initialize();
+  }
+
+  initialize() {
     this.position = this.startPoint;
     this.block = this.blocks[this.index];
+    this.nextBlock = this.blocks[this.index + 1];
   }
 
   change() {
+    this.block = this.nextBlock;
     this.position = this.startPoint;
     this.index = Math.floor((Math.random() * this.blocks.length - 1) + 1);
-    this.block = this.blocks[this.index];
+    this.nextBlock = this.blocks[this.index];
+
+    return this.nextBlock.colorize();
   }
 
   rotate(display) {
