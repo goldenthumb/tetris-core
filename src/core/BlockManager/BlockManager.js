@@ -14,10 +14,10 @@ export default class BlockManager {
     this._block = null;
     this._nextBlock = null;
 
-    this.initialize();
+    this.ready();
   }
 
-  initialize() {
+  ready() {
     this._position = this._startPoint;
     this._block = this._blocks[this._index];
     this._nextBlock = this._blocks[this._index + 1];
@@ -29,7 +29,7 @@ export default class BlockManager {
     this._index = Math.floor((Math.random() * this._blocks.length - 1) + 1);
     this._nextBlock = this._blocks[this._index];
 
-    return this._getRenderData();
+    return this;
   }
 
   rotate() {
@@ -93,7 +93,7 @@ export default class BlockManager {
 
     if (isOnTheBottom) {
       this._data = this._merge(this._data, this._current = nextCurrent);
-      this.change();
+      this.change().ready();
       return this._data;
     }
 

@@ -1,7 +1,7 @@
 import BlockManager from '../core/BlockManager';
 
 const OPTIONS = {
-  START_POINT: { x: 4, y: 0 },
+  START_POINT: { x: 4, y: -1 },
   DISPLAY: { rows: 20, cols: 11 }
 };
 
