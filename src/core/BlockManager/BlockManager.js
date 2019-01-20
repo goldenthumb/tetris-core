@@ -4,27 +4,31 @@ import Data from '../Data';
 
 export default class BlockManager {
   constructor(OPTIONS) {
-    this._index = 0;
     this._blocks = BLOCKS.map(({ color, types }) => new Block(color, types));
+    this._index = Math.floor((Math.random() * this._blocks.length - 1) + 1);
     this._startPoint = OPTIONS.START_POINT;
     this._displaySize = OPTIONS.DISPLAY;
-    this._current = new Data(this._displaySize).initialize();
-    this._data = new Data(this._displaySize).initialize();
+    this._current = null;
+    this._data = null;
     this._position = null;
     this._block = null;
     this._nextBlock = null;
 
-    this.ready();
+    this.initialize();
   }
 
-  ready() {
-    this._position = this._startPoint;
-    this._block = this._blocks[this._index];
-    this._nextBlock = this._blocks[this._index + 1];
+  on(eventName, listener) {
+    this._emitter.on(eventName, listener);
+  }
+
+  initialize() {
+    this._current = new Data(this._displaySize).initialize();
+    this._data = new Data(this._displaySize).initialize();
+    this.change();
   }
 
   change() {
-    this._block = this._nextBlock;
+    this._block = this._nextBlock || this._blocks[this._index];
     this._position = this._startPoint;
     this._index = Math.floor((Math.random() * this._blocks.length - 1) + 1);
     this._nextBlock = this._blocks[this._index];
@@ -83,23 +87,28 @@ export default class BlockManager {
       ...nextPosition
     });
 
-    const isOnTheBottom = (nextPosition.y + this._block.rows) === rows;
-
     if (this._isOverlap(this._data, nextCurrent)) {
       this._data = this._merge(this._data, this._current);
+
+      if (nextPosition.y === 0) {
+        alert('end');
+        location.reload();
+      }
+
       this.change();
       return this._data;
     }
 
-    if (isOnTheBottom) {
-      this._data = this._merge(this._data, this._current = nextCurrent);
-      this.change().ready();
+    if (this._isOnTheBottom(nextPosition)) {
+      this._data = this._merge(this._data, nextCurrent);
+      this.change();
       return this._data;
     }
 
     this._position = nextPosition;
+    this._current = nextCurrent;
 
-    return this._merge(this._cloneData(this._data), this._current = nextCurrent);
+    return this._merge(this._cloneData(this._data), this._current);
   }
 
   _appendBlock({ display, block, y, x }) {
@@ -114,7 +123,6 @@ export default class BlockManager {
   
   _isEdge(position = this._position) {
     return (
-      position.y < 0 ||
       position.x < 0 ||
       (this._block.rows + position.y) > this._data.rows ||
       (this._block.cols + position.x) > this._data.cols
@@ -131,6 +139,10 @@ export default class BlockManager {
     }
 
     return false;
+  }
+
+  _isOnTheBottom(nextPosition) {
+    return(nextPosition.y + this._block.rows) === this._data.rows;
   }
 
   _cloneData(data) {
