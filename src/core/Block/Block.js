@@ -1,21 +1,15 @@
-import { deepCopy } from '../../lib/utils';
+import BLOCKS from './BLOCKS';
+import { deepCopy, getRandomNumber } from '../../lib/utils';
 
 export default class Block {
-  constructor(color, types) {
+  constructor() {
     this.cols = null;
     this.rows = null;
-
-    this._color = color;
-    this._types = types;
-    this._type = 0;
-    this._typeSize = Object.keys(this._types).length;
+    this._block = BLOCKS[getRandomNumber(BLOCKS.length)];
+    this._typeSize = Object.keys(this._block.types).length;
+    this._type = getRandomNumber(this._typeSize);
 
     this._setBlockSize();
-  }
-
-  initialize() {
-    this._type = 0;
-    return this;
   }
 
   rotate(isClockwise = true) {
@@ -29,9 +23,9 @@ export default class Block {
   }
 
   colorize() {
-    return deepCopy(this._types[this._type]).map((line) => (
+    return deepCopy(this._block.types[this._type]).map((line) => (
       line.map((cell, i) => {
-        if (line[i] === 1) return this._color;
+        if (line[i] === 1) return this._block.color;
         else return 0;
       })
     ))
@@ -50,8 +44,7 @@ export default class Block {
   }
 
   _setBlockSize() {
-    this.rows = this._types[this._type].length;
-    this.cols = this._types[this._type][0].length;
+    this.rows = this._block.types[this._type].length;
+    this.cols = this._block.types[this._type][0].length;
   }
-
 }

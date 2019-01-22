@@ -28,7 +28,6 @@ const Main = () => ({ tetris: { blockManager } }, { tetris: tetrisActions }) => 
     <div
       class={css['main']}
       oncreate={() => {
-        tetrisActions.block('initialize');
         tetrisActions.block('moveDown');
         document.addEventListener('keydown', keyDownListener);
       }}

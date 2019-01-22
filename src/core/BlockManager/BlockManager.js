@@ -1,18 +1,21 @@
-import BLOCKS from './BLOCKS';
+import EventEmitter from 'event-emitter';
+
 import Block from '../Block';
 import Data from '../Data';
 
+import { isEmpty, circulateTwoDArray, isConflictTwoDArray, cloneTwoDArray } from '../../lib/utils';
+
 export default class BlockManager {
   constructor(OPTIONS) {
-    this._blocks = BLOCKS.map(({ color, types }) => new Block(color, types));
-    this._index = Math.floor((Math.random() * this._blocks.length - 1) + 1);
     this._startPoint = OPTIONS.START_POINT;
     this._displaySize = OPTIONS.DISPLAY;
-    this._current = null;
-    this._data = null;
-    this._position = null;
+    this._emitter = new EventEmitter();
     this._block = null;
     this._nextBlock = null;
+    this._position = null;
+    this._nextPosition = null;
+    this._current = null;
+    this._data = null;
 
     this.initialize();
   }
@@ -28,142 +31,104 @@ export default class BlockManager {
   }
 
   change() {
-    this._block = this._nextBlock || this._blocks[this._index];
+    this._block = this._nextBlock || new Block();
     this._position = this._startPoint;
-    this._index = Math.floor((Math.random() * this._blocks.length - 1) + 1);
-    this._nextBlock = this._blocks[this._index];
+    this._nextPosition = this._startPoint;
+    this._nextBlock = new Block();
 
     return this;
   }
 
   rotate() {
     this._block.rotate();
+    this._nextPosition = this._position;
 
-    if (this._isEdge()) return false;
+    if (this._isAvailable()) {
+      return this;
+    }
 
-    return this._getRenderData();
+    this._block.rotate(false);
+    return false;
   }
 
   moveDown() {
     const { x, y } = this._position;
-    const position = { x: x, y: y + 1 };
+    this._nextPosition = { x: x, y: y + 1 };
 
-    return this._move(position);
+    return this._isAvailable() ? this : false;
   }
 
   moveLeft() {
     const { x, y } = this._position;
-    const position = { x: x - 1, y: y };
+    this._nextPosition = { x: x - 1, y: y };
 
-    return this._move(position);
+    return this._isAvailable() ? this : false;
   }
 
   moveRight() {
     const { x, y } = this._position;
-    const position = { x: x + 1, y: y };
+    this._nextPosition = { x: x + 1, y: y };
 
-    return this._move(position);
+    return this._isAvailable() ? this : false;
   }
 
-  _move(position) {
-    if (this._isEdge(position)) return false;
-
-    return this._getRenderData(position);
-  }
-
-  _getRenderData(position) {
+  getRenderData() {
     return {
-      displayData: this._setDisplay(position),
+      displayData: this._setDisplay(),
       nextBlock: this._nextBlock.colorize()
     };
   }
 
-  _setDisplay(nextPosition = this._position) {
-    const { rows, cols } = this._data;
+  _setDisplay() {
+    if (this._isOnTheBottom(this._nextPosition)) {
+      this.change();
+      return this._data = this._merge(this._data, this._current);
+    }
 
-    const nextCurrent = this._appendBlock({
-      display: new Data({ rows, cols }).initialize(),
-      block: this._block.colorize(),
-      ...nextPosition
-    });
+    const nextCurrent = this._appendBlock(this._nextPosition);
 
-    if (this._isOverlap(this._data, nextCurrent)) {
-      this._data = this._merge(this._data, this._current);
-
-      if (nextPosition.y === 0) {
-        alert('end');
-        location.reload();
+    if (isConflictTwoDArray(this._data, nextCurrent)) {
+      if (this._nextPosition.y === 0) {
+        this._emitter.emit('end');
+        return;
       }
 
       this.change();
-      return this._data;
+      return this._data = this._merge(this._data, this._current);
     }
 
-    if (this._isOnTheBottom(nextPosition)) {
-      this._data = this._merge(this._data, nextCurrent);
-      this.change();
-      return this._data;
-    }
-
-    this._position = nextPosition;
+    this._position = this._nextPosition;
     this._current = nextCurrent;
 
-    return this._merge(this._cloneData(this._data), this._current);
+    return this._merge(cloneTwoDArray(this._data), this._current);
   }
 
-  _appendBlock({ display, block, y, x }) {
-    block.forEach((value, row) => {
-      value.forEach((value, col) => {
-        display[y + row][x + col] = value;
-      });
+  _appendBlock(position) {
+    const display = new Data(this._displaySize).initialize();
+    const block = this._block.colorize();
+
+    circulateTwoDArray(block, (y, x) => {
+      display[position.y + y][position.x + x] = block[y][x];
     });
 
     return display;
   };
-  
-  _isEdge(position = this._position) {
+
+  _isAvailable() {
     return (
-      position.x < 0 ||
-      (this._block.rows + position.y) > this._data.rows ||
-      (this._block.cols + position.x) > this._data.cols
+      this._nextPosition.x >= 0 &&
+      (this._block.rows + this._nextPosition.y) <= this._data.rows + 1 &&
+      (this._block.cols + this._nextPosition.x) <= this._data.cols
     );
   }
 
-  _isOverlap(a, b) {
-    for (let row = 0; row < this._displaySize.rows; row++) {
-      for (let col = 0; col < this._displaySize.cols; col++) {
-        if (a[row][col] !== 0 && b[row][col] !== 0) {
-          return true;
-        }
-      }
-    }
-
-    return false;
-  }
-
   _isOnTheBottom(nextPosition) {
-    return(nextPosition.y + this._block.rows) === this._data.rows;
+    return (nextPosition.y + this._block.rows) > this._data.rows;
   }
 
-  _cloneData(data) {
-    const newData = new Data(this._displaySize).initialize();
-
-    data.forEach((value, row) => {
-      value.forEach((value, col) => {
-        newData[row][col] = value;
-      });
-    });
-
-    return newData;
-  }
-
-  _merge(total, current) {
-    total.forEach((value, row) => {
-      value.forEach((value, col) => {
-        if (current[row][col] !== 0) {
-          total[row][col] = current[row][col];
-        }
-      });
+  _merge(total, append) {
+    circulateTwoDArray(total, (y, x) => {
+      if (!isEmpty(append[y][x])) total[y][x] = append[y][x];
     });
 
     return total;

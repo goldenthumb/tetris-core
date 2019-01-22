@@ -17,7 +17,13 @@ export const state = {
 export const actions = {
   tetris: {
     block: (action) => () => {
-      return blockManager[action]();
+      const result = blockManager[action]();
+      return result ? blockManager.getRenderData() : false;
     }
   }
 };
+
+blockManager.on('end', () => {
+  alert('end');
+  location.reload();
+});
