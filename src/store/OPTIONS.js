@@ -1,4 +1,10 @@
 export default {
-  START_POINT: { x: 4, y: -1 },
-  DISPLAY: { rows: 20, cols: 11 }
+  BLOCK: {
+    startPoint: { x: 4, y: -1 },
+    display: { rows: 20, cols: 11 },
+  },
+  STAGE: {
+    maxStage: 10,
+    speed: { min: 500, max: 100 }
+  }
 };

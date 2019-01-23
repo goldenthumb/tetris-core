@@ -3,10 +3,10 @@ import css from './Main.scss';
 
 import Panel from '../Panel';
 import Preview from '../Preview';
-import Score from '../Score';
+import Info from '../Info';
 import Display from '../Display';
 
-const Main = () => ({ tetris: { blockManager } }, { tetris: tetrisActions }) => {
+const Main = () => ({ tetris: { stage, score } }, { tetris: tetrisActions }) => {
   const keyDownListener = ({ keyCode }) => {
     switch (keyCode) {
       case 37:
@@ -30,7 +30,7 @@ const Main = () => ({ tetris: { blockManager } }, { tetris: tetrisActions }) => 
     <div
       class={css['main']}
       oncreate={() => {
-        tetrisActions.block('moveDown');
+        tetrisActions.start();
         document.addEventListener('keydown', keyDownListener);
       }}
       onremove={() => {
@@ -39,7 +39,8 @@ const Main = () => ({ tetris: { blockManager } }, { tetris: tetrisActions }) => 
     >
       <Panel>
         <Preview />
-        <Score />
+        <Info label='stage' data={stage} />
+        <Info label='score' data={score} />
       </Panel>
       <Display/>
     </div>

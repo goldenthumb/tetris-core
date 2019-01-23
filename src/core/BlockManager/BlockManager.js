@@ -7,9 +7,9 @@ import Data from '../Data';
 import { isEmpty, circulateTwoDArray, isConflictTwoDArray, cloneTwoDArray } from '../../lib/utils';
 
 export default class BlockManager {
-  constructor(OPTIONS) {
-    this._startPoint = OPTIONS.START_POINT;
-    this._displaySize = OPTIONS.DISPLAY;
+  constructor(options) {
+    this._startPoint = options.startPoint;
+    this._displaySize = options.display;
     this._emitter = new EventEmitter();
     this._block = null;
     this._nextBlock = null;
@@ -74,7 +74,7 @@ export default class BlockManager {
     this._setDisplayData();
   }
 
-  getRenderData() {
+  getState() {
     return {
       displayData: this._displayData,
       nextBlock: this._nextBlock.colorize()
@@ -119,7 +119,7 @@ export default class BlockManager {
     });
 
     if (clearLine) {
-      this._emitter.emit('score', clearLine);
+      this._emitter.emit('clear', clearLine);
     }
   }
 
