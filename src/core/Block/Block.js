@@ -3,13 +3,21 @@ import { deepCopy, getRandomNumber } from '../../lib/utils';
 
 export default class Block {
   constructor() {
-    this.cols = null;
-    this.rows = null;
+    this._width = null;
+    this._height = null;
     this._block = BLOCKS[getRandomNumber(BLOCKS.length)];
     this._typeSize = Object.keys(this._block.types).length;
     this._type = getRandomNumber(this._typeSize);
 
     this._setBlockSize();
+  }
+
+  get width() {
+    return this._width;
+  }
+
+  get height() {
+    return this._height;
   }
 
   rotate(isClockwise = true) {
@@ -44,7 +52,7 @@ export default class Block {
   }
 
   _setBlockSize() {
-    this.rows = this._block.types[this._type].length;
-    this.cols = this._block.types[this._type][0].length;
+    this._height = this._block.types[this._type].length;
+    this._width = this._block.types[this._type][0].length;
   }
 }

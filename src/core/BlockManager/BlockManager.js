@@ -140,13 +140,13 @@ export default class BlockManager {
   _isEdge() {
     return (
       this._nextPosition.x < 0 ||
-      (this._block.rows + this._nextPosition.y) > this._total.rows + 1 ||
-      (this._block.cols + this._nextPosition.x) > this._total.cols
+      (this._block.height + this._nextPosition.y) > this._total.rows + 1 ||
+      (this._block.width + this._nextPosition.x) > this._total.cols
     );
   }
 
   _isOnTheBottom() {
-    return (this._nextPosition.y + this._block.rows) > this._total.rows;
+    return (this._nextPosition.y + this._block.height) > this._total.rows;
   }
 
   _isConflict() {
