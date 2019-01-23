@@ -9,7 +9,7 @@ export const isEmpty = value => value === 0 || value === undefined || value === 
 export const circulateTwoDArray = (array, fn) => {
   array.forEach((row, y) => {
     row.forEach((col, x) => {
-      fn(y, x);
+      fn(y, x, array);
     });
   });
 };

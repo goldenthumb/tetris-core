@@ -14,20 +14,15 @@ export default class BlockManager {
     this._nextBlock = null;
     this._position = null;
     this._nextPosition = null;
-    this._current = null;
-    this._data = null;
+    this._current = new Data(this._displaySize).initialize();
+    this._total = new Data(this._displaySize).initialize();
+    this._displayData = new Data(this._displaySize).initialize();
 
-    this.initialize();
+    this.change();
   }
 
   on(eventName, listener) {
     this._emitter.on(eventName, listener);
-  }
-
-  initialize() {
-    this._current = new Data(this._displaySize).initialize();
-    this._data = new Data(this._displaySize).initialize();
-    this.change();
   }
 
   change() {
@@ -43,87 +38,107 @@ export default class BlockManager {
     this._block.rotate();
     this._nextPosition = this._position;
 
-    if (this._isAvailable()) {
-      return this;
+    if (!this._isAvailable()) {
+      this._block.rotate(false);
+      return;
     }
 
-    this._block.rotate(false);
-    return false;
+    this._setDisplayData();
   }
 
   moveDown() {
     const { x, y } = this._position;
     this._nextPosition = { x: x, y: y + 1 };
 
-    return this._isAvailable() ? this : false;
+    if (!this._isAvailable()) return;
+
+    this._setDisplayData();
   }
 
   moveLeft() {
     const { x, y } = this._position;
     this._nextPosition = { x: x - 1, y: y };
 
-    return this._isAvailable() ? this : false;
+    if (!this._isAvailable()) return;
+
+    this._setDisplayData();
   }
 
   moveRight() {
     const { x, y } = this._position;
     this._nextPosition = { x: x + 1, y: y };
 
-    return this._isAvailable() ? this : false;
+    if (!this._isAvailable()) return;
+
+    this._setDisplayData();
   }
 
   getRenderData() {
     return {
-      displayData: this._setDisplay(),
+      displayData: this._displayData,
       nextBlock: this._nextBlock.colorize()
-    };
-  }
-
-  _setDisplay() {
-    if (this._isOnTheBottom(this._nextPosition)) {
-      this.change();
-      return this._data = this._merge(this._data, this._current);
     }
-
-    const nextCurrent = this._appendBlock(this._nextPosition);
-
-    if (isConflictTwoDArray(this._data, nextCurrent)) {
-      if (this._nextPosition.y === 0) {
-        this._emitter.emit('end');
-        return;
-      }
-
-      this.change();
-      return this._data = this._merge(this._data, this._current);
-    }
-
-    this._position = this._nextPosition;
-    this._current = nextCurrent;
-
-    return this._merge(cloneTwoDArray(this._data), this._current);
   }
-
-  _appendBlock(position) {
-    const display = new Data(this._displaySize).initialize();
-    const block = this._block.colorize();
-
-    circulateTwoDArray(block, (y, x) => {
-      display[position.y + y][position.x + x] = block[y][x];
-    });
-
-    return display;
-  };
 
   _isAvailable() {
+    if (this._isEdge()) return false;
+
+    if (this._isOnTheBottom() || this._isConflict()) {
+      if (this._position.y < 0) {
+        this._emitter.emit('end');
+        return false;
+      }
+
+      circulateTwoDArray(this._block.colorize(), (y, x, block) => {
+        const blockY = this._position.y + y;
+        const blockX = this._position.x + x;
+
+        if (!isEmpty(block[y][x])) {
+          this._total[blockY][blockX] = block[y][x];
+        }
+      });
+
+      this.change().moveDown();
+    }
+
+    return true;
+  }
+
+  _setDisplayData() {
+    this._position = this._nextPosition;
+
+    circulateTwoDArray(this._block.colorize(), (y, x, block) => {
+      if (!isEmpty(block[y][x])) {
+        this._current[this._position.y + y][this._position.x + x] = block[y][x];
+      }
+    });
+
+    this._displayData = this._merge(cloneTwoDArray(this._total), this._current);
+    this._current = new Data(this._displaySize).initialize();
+  }
+
+  _isEdge() {
     return (
-      this._nextPosition.x >= 0 &&
-      (this._block.rows + this._nextPosition.y) <= this._data.rows + 1 &&
-      (this._block.cols + this._nextPosition.x) <= this._data.cols
+      this._nextPosition.x < 0 ||
+      (this._block.rows + this._nextPosition.y) > this._total.rows + 1 ||
+      (this._block.cols + this._nextPosition.x) > this._total.cols
     );
   }
 
-  _isOnTheBottom(nextPosition) {
-    return (nextPosition.y + this._block.rows) > this._data.rows;
+  _isOnTheBottom() {
+    return (this._nextPosition.y + this._block.rows) > this._total.rows;
+  }
+
+  _isConflict() {
+    const current = new Data(this._displaySize).initialize();
+
+    circulateTwoDArray(this._block.colorize(), (y, x, block) => {
+      if (!isEmpty(block[y][x])) {
+        current[this._nextPosition.y + y][this._nextPosition.x + x] = block[y][x];
+      }
+    });
+
+    return isConflictTwoDArray(this._total, current);
   }
 
   _merge(total, append) {

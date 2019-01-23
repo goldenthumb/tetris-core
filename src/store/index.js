@@ -17,8 +17,8 @@ export const state = {
 export const actions = {
   tetris: {
     block: (action) => () => {
-      const result = blockManager[action]();
-      return result ? blockManager.getRenderData() : false;
+      blockManager[action]();
+      return blockManager.getRenderData();
     }
   }
 };
