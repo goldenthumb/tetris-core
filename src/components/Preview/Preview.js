@@ -7,10 +7,8 @@ const Preview = () => ({ tetris: { nextBlock } }) => {
   if (!nextBlock) return null;
 
   return (
-    <div>
-      <div class={css['block-wrap']}>
-        <Renderer data={nextBlock} />
-      </div>
+    <div class={css['block-wrap']}>
+      <Renderer data={nextBlock} />
     </div>
   );
 };

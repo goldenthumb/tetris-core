@@ -1,4 +1,5 @@
 import EventEmitter from 'event-emitter';
+import _ from 'lodash';
 
 import Block from '../Block';
 import Data from '../Data';
@@ -98,10 +99,28 @@ export default class BlockManager {
         }
       });
 
+      this._clearLine();
       this.change().moveDown();
     }
 
     return true;
+  }
+
+  _clearLine() {
+    let clearLine = 0;
+
+    this._total.forEach((row, i) => {
+      if (_.every(row)) {
+        clearLine++;
+        const line = _.fill(row, 0);
+        this._total.splice(i, 1);
+        this._total.unshift(line);
+      }
+    });
+
+    if (clearLine) {
+      this._emitter.emit('score', clearLine);
+    }
   }
 
   _setDisplayData() {

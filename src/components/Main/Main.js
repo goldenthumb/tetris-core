@@ -1,7 +1,9 @@
 import { h } from 'hyperapp';
 import css from './Main.scss';
 
+import Panel from '../Panel';
 import Preview from '../Preview';
+import Score from '../Score';
 import Display from '../Display';
 
 const Main = () => ({ tetris: { blockManager } }, { tetris: tetrisActions }) => {
@@ -35,7 +37,10 @@ const Main = () => ({ tetris: { blockManager } }, { tetris: tetrisActions }) => 
         document.removeEventListener('keydown', keyDownListener);
       }}
     >
-      <Preview />
+      <Panel>
+        <Preview />
+        <Score />
+      </Panel>
       <Display/>
     </div>
   );

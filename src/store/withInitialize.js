@@ -9,6 +9,7 @@ export default (app) => {
   return (state, actions, view, element) => {
     state = {
       tetris: {
+        ...score.getRenderData(),
         ...blockManager.getRenderData(),
         ...state
       }
@@ -16,15 +17,18 @@ export default (app) => {
 
     actions = {
       tetris: {
-        update: () => blockManager.getRenderData(),
         block: (action) => blockManager[action](),
+        blockRender: () => blockManager.getRenderData(),
+        scoreRender: () => score.getRenderData(),
         ...actions
       }
     };
 
     const main = app(state, actions, view, element);
 
-    blockManager.on('render', main.tetris.update);
+    blockManager.on('render', main.tetris.blockRender);
+    blockManager.on('score', clearLine => score.add(clearLine));
+    score.on('render', main.tetris.scoreRender);
 
     blockManager.on('end', () => {
       alert('end');
