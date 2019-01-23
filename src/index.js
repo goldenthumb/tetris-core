@@ -1,7 +1,8 @@
+import { h } from 'hyperapp';
 import { app } from 'hyperapp';
 import './index.scss';
 
-import { state, actions } from './store';
-import view from './App';
+import withInitialize from './store/withInitialize';
+import Main from './components/Main';
 
-app(state, actions, view, document.getElementById('root'));
+withInitialize(app)({}, {}, <Main />, document.getElementById('root'));

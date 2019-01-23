@@ -1,23 +1,17 @@
 export default class Score {
   constructor() {
-    this.curr = 0;
-    this.total = 0;
-    this.listener = null;
+    this._current = 0;
+    this._total = 0;
   }
 
-  init(listener) {
-    this.listener = listener;
-  }
-
-  add(line, stage) {
+  add (line, stage) {
     const score = parseInt((stage * 5) * (2 ** line));
-    this.curr += score;
-    this.total += score;
-    this.listener();
+    this._current += score;
+    this._total += score;
   }
 
-  clear() {
-    this.curr = 0;
-    this.total = 0;
+  clear () {
+    this._current = 0;
+    this._total = 0;
   }
 }

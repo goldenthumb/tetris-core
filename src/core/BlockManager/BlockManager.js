@@ -115,6 +115,7 @@ export default class BlockManager {
 
     this._displayData = this._merge(cloneTwoDArray(this._total), this._current);
     this._current = new Data(this._displaySize).initialize();
+    this._emitter.emit('render');
   }
 
   _isEdge() {
