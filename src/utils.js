@@ -1,4 +1,4 @@
-import Data from '../core/Data';
+import Data from './Data';
 
 export const isEmpty = value => value === 0 || value === undefined || value === null;
 

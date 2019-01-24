@@ -1,12 +1,10 @@
 import _ from 'lodash';
 
-import BLOCKS from './BLOCKS';
-
 export default class Block {
-  constructor() {
+  constructor(blocks) {
     this._width = null;
     this._height = null;
-    this._block = BLOCKS[_.random(0, BLOCKS.length - 1)];
+    this._block = blocks[_.random(0, blocks.length - 1)];
     this._typeSize = Object.keys(this._block.types).length;
     this._type = _.random(0, this._typeSize - 1);
 

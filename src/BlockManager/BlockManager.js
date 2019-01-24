@@ -4,12 +4,13 @@ import _ from 'lodash';
 import Block from '../Block';
 import Data from '../Data';
 
-import { isEmpty, circulateTwoDArray, isConflictTwoDArray, cloneTwoDArray } from '../../lib/utils';
+import { isEmpty, circulateTwoDArray, isConflictTwoDArray, cloneTwoDArray } from '../utils';
 
 export default class BlockManager {
-  constructor(options) {
-    this._startPoint = options.startPoint;
-    this._displaySize = options.display;
+  constructor({ rows, cols, startPoint }, blocks) {
+    this._startPoint = startPoint;
+    this._displaySize = { rows, cols };
+    this._blocks = blocks;
     this._emitter = new EventEmitter();
     this._block = null;
     this._nextBlock = null;
@@ -17,7 +18,7 @@ export default class BlockManager {
     this._nextPosition = null;
     this._current = new Data(this._displaySize).initialize();
     this._total = new Data(this._displaySize).initialize();
-    this._displayData = new Data(this._displaySize).initialize();
+    this._display = new Data(this._displaySize).initialize();
 
     this.change();
   }
@@ -27,10 +28,10 @@ export default class BlockManager {
   }
 
   change() {
-    this._block = this._nextBlock || new Block();
+    this._block = this._nextBlock || new Block(this._blocks);
     this._position = this._startPoint;
     this._nextPosition = this._startPoint;
-    this._nextBlock = new Block();
+    this._nextBlock = new Block(this._blocks);
 
     return this;
   }
@@ -44,7 +45,7 @@ export default class BlockManager {
       return;
     }
 
-    this._setDisplayData();
+    this._setDisplay();
   }
 
   moveDown() {
@@ -53,7 +54,7 @@ export default class BlockManager {
 
     if (!this._isAvailable()) return;
 
-    this._setDisplayData();
+    this._setDisplay();
   }
 
   moveLeft() {
@@ -62,7 +63,7 @@ export default class BlockManager {
 
     if (!this._isAvailable()) return;
 
-    this._setDisplayData();
+    this._setDisplay();
   }
 
   moveRight() {
@@ -71,12 +72,12 @@ export default class BlockManager {
 
     if (!this._isAvailable()) return;
 
-    this._setDisplayData();
+    this._setDisplay();
   }
 
   getState() {
     return {
-      displayData: this._displayData,
+      display: this._display,
       nextBlock: this._nextBlock.colorize()
     }
   }
@@ -123,7 +124,7 @@ export default class BlockManager {
     }
   }
 
-  _setDisplayData() {
+  _setDisplay() {
     this._position = this._nextPosition;
 
     circulateTwoDArray(this._block.colorize(), (y, x, block) => {
@@ -132,9 +133,9 @@ export default class BlockManager {
       }
     });
 
-    this._displayData = this._merge(cloneTwoDArray(this._total), this._current);
+    this._display = this._merge(cloneTwoDArray(this._total), this._current);
     this._current = new Data(this._displaySize).initialize();
-    this._emitter.emit('render');
+    this._emitter.emit('render', this.getState());
   }
 
   _isEdge() {

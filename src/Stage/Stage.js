@@ -21,8 +21,7 @@ export default class Stage {
   _setSpeed() {
     const { min, max } = this._options.speed;
     this._speed = min - ((min - max) * (this._stage / this._options.maxStage));
-    this._emitter.emit('render');
-    this._emitter.emit('update', this._speed);
+    this._emitter.emit('update', { stage: this._stage, speed: this._speed });
   }
 
   getState() {

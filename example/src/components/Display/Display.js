@@ -2,8 +2,8 @@ import { h } from 'hyperapp';
 
 import Renderer from '../Renderer';
 
-const Display = () => ({ tetris: { displayData } }) => (
-  <Renderer data={displayData} />
+const Display = () => ({ tetris: { display } }) => (
+  <Renderer data={display} />
 );
 
 export default Display;
