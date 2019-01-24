@@ -36,9 +36,9 @@ export default (app) => {
     const main = app(state, actions, view, element);
 
     stage.on('render', main.tetris.stageRender);
-    score.on('render', main.tetris.scoreRender);
     blockManager.on('render', main.tetris.blockRender);
 
+    score.on('update', main.tetris.scoreRender);
     stage.on('update', speed => {
       clearInterval(interval);
 

@@ -13,7 +13,7 @@ export default class Score {
   add(line, stage = 1) {
     const score = parseInt((stage * 5) * (2 ** line));
     this._total += score;
-    this._emitter.emit('render', this._total);
+    this._emitter.emit('update', this._total);
 
     return this._total;
   }

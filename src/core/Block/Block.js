@@ -1,13 +1,14 @@
+import _ from 'lodash';
+
 import BLOCKS from './BLOCKS';
-import { deepCopy, getRandomNumber } from '../../lib/utils';
 
 export default class Block {
   constructor() {
     this._width = null;
     this._height = null;
-    this._block = BLOCKS[getRandomNumber(BLOCKS.length)];
+    this._block = BLOCKS[_.random(0, BLOCKS.length - 1)];
     this._typeSize = Object.keys(this._block.types).length;
-    this._type = getRandomNumber(this._typeSize);
+    this._type = _.random(0, this._typeSize - 1);
 
     this._setBlockSize();
   }
@@ -31,7 +32,7 @@ export default class Block {
   }
 
   colorize() {
-    return deepCopy(this._block.types[this._type]).map((line) => (
+    return _.cloneDeep(this._block.types[this._type]).map((line) => (
       line.map((cell, i) => {
         if (line[i] === 1) return this._block.color;
         else return 0;

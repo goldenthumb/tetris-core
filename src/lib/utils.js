@@ -1,11 +1,5 @@
 import Data from '../core/Data';
 
-export const compose = (...functions) => functions.reduce((a, b) => (...args) => a(b(...args)));
-
-export const deepCopy = data => JSON.parse(JSON.stringify(data));
-
-export const getRandomNumber = range => Math.floor((Math.random() * range));
-
 export const isEmpty = value => value === 0 || value === undefined || value === null;
 
 export const circulateTwoDArray = (array, fn) => {
