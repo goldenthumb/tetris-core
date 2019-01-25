@@ -3,9 +3,10 @@ import EventEmitter from 'event-emitter';
 import Stage from './Stage';
 import BlockManager from './BlockManager';
 import Score from './Score';
+import OPTIONS from './OPTIONS';
 
-export default class Tetris {
-  constructor(OPTIONS) {
+export default class TetrisCore {
+  constructor(OPTIONS = OPTIONS) {
     this._stage = new Stage(OPTIONS.stage);
     this._block = new BlockManager(OPTIONS.display, OPTIONS.blocks);
     this._score = new Score();
