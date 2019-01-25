@@ -1,5 +1,5 @@
 {
-  "name": "hyperapp-tetris",
+  "name": "tetris-core",
   "version": "0.1.0",
   "description": "",
   "main": "index.js",
@@ -11,12 +11,12 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/goldenthumb/hyperapp-tetris.git"
+    "url": "git+https://github.com/goldenthumb/tetris-core.git"
   },
   "author": "goldenthumb",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/goldenthumb/hyperapp-tetris/issues"
+    "url": "https://github.com/goldenthumb/tetris-core/issues"
   },
   "devDependencies": {
     "@babel/core": "^7.2.2",
