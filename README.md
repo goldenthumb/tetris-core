@@ -27,7 +27,7 @@ tetris.on('render', data => {
   const { stage, score, speed, nextBlock, display } = data;
   // stage ==> number
   // score ==> number
-  // speed ==> speed
+  // speed ==> number
   // nextBlock ==> two dimensional array (0 or block hex color code)
   // display ==> two dimensional array (0 or block hex color code)
 });
