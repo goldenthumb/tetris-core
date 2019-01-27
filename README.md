@@ -218,7 +218,7 @@ const tetris = new Tetris(options);
 ## Methods
 |  Name     | Description                                           |
 |-----------|-------------------------------------------------------|
-| start     | tart the game                                         |
+| start     | start the game                                         |
 | getState  | render data (stage, score, speed, nextBlock, display) |          |
 | moveDown  | move the block down                                   |
 | moveLeft  | move the block left                                   |

@@ -1,53 +1,20 @@
 import Block from './Block';
+import OPTIONS from '../OPTIONS';
 
-const BLOCK = {
-  color: '#00a9eb',
-  types: {
-    0: [[1, 1, 1, 1]],
-    1: [[1], [1], [1], [1]],
-    2: [[1, 1, 1, 1]],
-    3: [[1], [1], [1], [1]]
-  }
-};
-
-test('initialize', () => {
-  const {color, types} = BLOCK;
-  const block = new Block(color, types);
-
-  expect(block._color).toBe(color);
-  expect(block._types[block._type]).toBe(types[0]);
-});
+const block = new Block(OPTIONS.blocks);
 
 test('rotate clockwise', () => {
-  const {color, types} = BLOCK;
-  const block = new Block(color, types);
-
-  block.rotate();
-  expect(block._types[block._type]).toBe(types[1]);
-
-  block.rotate();
-  expect(block._types[block._type]).toBe(types[2]);
-
-  block.rotate();
-  expect(block._types[block._type]).toBe(types[3]);
-
-  block.rotate();
-  expect(block._types[block._type]).toBe(types[0]);
+  for (let i = 0; i < 10; i++) {
+    const type = block._type;
+    block.rotate();
+    expect(block._type).toBe(type + 1 === block._typeSize ? 0 : type + 1);
+  }
 });
 
 test('rotate anticlockwise', () => {
-  const {color, types} = BLOCK;
-  const block = new Block(color, types);
-
-  block.rotate(false);
-  expect(block._types[block._type]).toBe(types[3]);
-
-  block.rotate(false);
-  expect(block._types[block._type]).toBe(types[2]);
-
-  block.rotate(false);
-  expect(block._types[block._type]).toBe(types[1]);
-
-  block.rotate(false);
-  expect(block._types[block._type]).toBe(types[0]);
+  for (let i = 0; i < 10; i++) {
+    const type = block._type;
+    block.rotate(false);
+    expect(block._type).toBe(type - 1 < 0 ? block._typeSize - 1 : type - 1);
+  }
 });
