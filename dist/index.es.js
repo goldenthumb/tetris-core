@@ -37,7 +37,7 @@ class Block {
     this._width = null;
     this._height = null;
     this._block = blocks[_.random(0, blocks.length - 1)];
-    this._typeSize = Object.keys(this._block.types).length;
+    this._typeSize = Object.entries(this._block.types).length;
     this._type = _.random(0, this._typeSize - 1);
 
     this._setBlockSize();
@@ -62,7 +62,7 @@ class Block {
   }
 
   colorize() {
-    return _.cloneDeep(this._block.types[this._type]).map((line) => (
+    return _.cloneDeep(this._block.types[this._type]).map(line => (
       line.map((cell, i) => {
         if (line[i] === 1) return this._block.color;
         else return 0;
