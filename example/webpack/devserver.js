@@ -8,8 +8,8 @@ module.exports = () => {
     devServer: {
       port: 3000,
       host: 'localhost',
-      contentBase: resolve(__dirname, '../views'),
-      publicPath: '/dist/js'
+      contentBase: resolve(__dirname, '../../'),
+      publicPath: '/example/dist/js'
     }
   };
 
