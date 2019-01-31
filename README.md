@@ -7,6 +7,7 @@ $ npm install tetris-core
 ```
 
 ### Demo (using hyperapp)
+- [example](https://goldenthumb.github.io/tetris-core/)
 - [hyperapp](https://www.npmjs.com/package/hyperapp)
 ```bash
 $ git clone https://github.com/goldenthumb/tetris-core.git
